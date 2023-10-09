@@ -4,7 +4,10 @@ services:
   core:
     build: ./core
     ports:
-      - 3000:3000
+      - '3000:3000'
     restart: always
+    volumes:
+      - ./core:/app
+
 volumes:
   tickethobe:
