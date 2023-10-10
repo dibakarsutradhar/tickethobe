@@ -1,6 +1,10 @@
 const express = require('express');
 const cors = require('cors');
+
+// module exports
 const { allowOrigins } = require('./libs/utils/allowOrigins');
+const UserRoutes = require('./routes/userRoutes');
+const GlobalErrorHandler = require('./libs/utils/globalErrorController');
 
 // init express app
 const app = express();
@@ -14,8 +18,8 @@ app.use(
 
 app.use(express.json());
 
-app.get('/', (req, res) => {
-	res.send('Hello Test!');
-});
+app.use('/api/v1/user', UserRoutes);
+
+app.use(GlobalErrorHandler);
 
 module.exports = app;
