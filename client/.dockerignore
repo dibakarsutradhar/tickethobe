@@ -1,0 +1,18 @@
+# Ignore all files that start with a dot
+.*
+
+# Ignore the node_modules directory
+node_modules
+
+# Ignore log files
+*.log
+
+# Ignore the .env file
+.env
+
+# Ignore the .git directory
+.git
+
+# Ignore Dockerfile
+Dockerfile
+.dockerignore
