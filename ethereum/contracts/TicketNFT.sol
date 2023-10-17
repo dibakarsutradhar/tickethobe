@@ -10,7 +10,7 @@ pragma solidity ^0.8.3;
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-contract NFT is ERC721URIStorage {
+contract TicketNFT is ERC721URIStorage {
     uint256 private _tokenIds;
     address contractAddress;
 
