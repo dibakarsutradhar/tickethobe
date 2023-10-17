@@ -7,16 +7,11 @@ pragma solidity ^0.8.3;
  * @notice This is a demo contract just for the hackathon, don't use it for production, not a complete contract
  */
 
-import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 
-import "hardhat/console.sol";
-
 contract NFT is ERC721URIStorage {
-    using Counters for Counters.Counter;
-
-    Counters.Counter private _tokenIds;
+    uint256 private _tokenIds;
     address contractAddress;
 
     constructor(address marketplaceAddress) ERC721("TicketHobe Dummy", "THD") {
@@ -24,8 +19,8 @@ contract NFT is ERC721URIStorage {
     }
 
     function createToken(string memory tokenURI) public returns (uint256) {
-        _tokenIds.increment();
-        uint256 newItemId = _tokenIds.current();
+        _tokenIds += 1;
+        uint256 newItemId = _tokenIds;
 
         _mint(msg.sender, newItemId);
         _setTokenURI(newItemId, tokenURI);

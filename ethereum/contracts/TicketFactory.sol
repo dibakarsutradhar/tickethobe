@@ -7,17 +7,14 @@ pragma solidity ^0.8.3;
  * @notice This is a demo contract just for the hackathon, don't use it for production, not a complete contract
  */
 
-import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 import "hardhat/console.sol";
 
 contract TicketFactory is ReentrancyGuard {
-    using Counters for Counters.Counter;
-
-    Counters.Counter private _itemIds;
-    Counters.Counter private _itemSold;
+    uint256 private _itemIds;
+    uint256 private _itemSold;
 
     address payable owner;
     uint256 listingPrice = 0.0025 ether; // @todo make it dynamic
@@ -58,13 +55,13 @@ contract TicketFactory is ReentrancyGuard {
         require(price > 0, "Price must be at lease 1 wei");
         require(msg.value == listingPrice, "Price must be equal to listing price");
 
-        _itemIds.increment();
-        uint256 itemId = _itemIds.current();
+        _itemIds += 1;
+        uint256 itemId = _itemIds;
 
         idToMarketItem[itemId] =
             MarketItem(itemId, nftContract, tokenId, payable(msg.sender), payable(address(0)), price, false);
 
-        IERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
+        ERC721(nftContract).transferFrom(msg.sender, address(this), tokenId);
 
         emit MarketItemCreated(itemId, nftContract, tokenId, msg.sender, address(0), price, false);
     }
@@ -77,17 +74,17 @@ contract TicketFactory is ReentrancyGuard {
         require(msg.value == price, "Please submit the asking price in order to complete the purchase");
 
         idToMarketItem[itemId].seller.transfer(msg.value);
-        IERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
+        ERC721(nftContract).transferFrom(address(this), msg.sender, tokenId);
         idToMarketItem[itemId].owner = payable(msg.sender);
         idToMarketItem[itemId].sold = true;
-        _itemSold.increment();
+        _itemSold += 1;
         payable(owner).transfer(listingPrice);
     }
 
     // returns all unsold market items
     function fetchMarketItems() public view returns (MarketItem[] memory) {
-        uint256 itemCount = _itemIds.current();
-        uint256 unsoldItemCount = _itemIds.current() - _itemSold.current();
+        uint256 itemCount = _itemIds;
+        uint256 unsoldItemCount = _itemIds - _itemSold;
         uint256 currentIndex = 0;
 
         MarketItem[] memory items = new MarketItem[](unsoldItemCount);
@@ -104,7 +101,7 @@ contract TicketFactory is ReentrancyGuard {
 
     // returns only items that an user has purchased
     function fetchMyNFTs() public view returns (MarketItem[] memory) {
-        uint256 totalItemCount = _itemIds.current();
+        uint256 totalItemCount = _itemIds;
         uint256 itemCount = 0;
         uint256 currentIndex = 0;
 
@@ -127,7 +124,7 @@ contract TicketFactory is ReentrancyGuard {
     }
 
     function fetchItemsCreated() public view returns (MarketItem[] memory) {
-        uint256 totalItemCount = _itemIds.current();
+        uint256 totalItemCount = _itemIds;
         uint256 itemCount = 0;
         uint256 currentIndex = 0;
 

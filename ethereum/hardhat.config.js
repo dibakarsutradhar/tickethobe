@@ -3,7 +3,16 @@ require('dotenv').config();
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-	solidity: '0.8.19',
+	solidity: {
+		compilers: [
+			{
+				version: '0.8.3',
+			},
+			{
+				version: '0.8.20',
+			},
+		],
+	},
 	networks: {
 		scrollSepolia: {
 			url: 'https://sepolia-rpc.scroll.io/' || '',
